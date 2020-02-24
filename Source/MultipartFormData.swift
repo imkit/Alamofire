@@ -56,7 +56,9 @@ open class MultipartFormData {
         }
 
         static func randomBoundary() -> String {
-            return String(format: "alamofire.boundary.%08x%08x", arc4random(), arc4random())
+            var bytes = [UInt32](repeating: 0, count: 2)
+            _ = SecRandomCopyBytes(kSecRandomDefault, bytes.count, &bytes)
+            return String(format: "alamofire.boundary.%08x%08x", bytes[0], bytes[1])
         }
 
         static func boundaryData(forBoundaryType boundaryType: BoundaryType, boundary: String) -> Data {
